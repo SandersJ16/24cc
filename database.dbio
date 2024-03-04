@@ -1,0 +1,75 @@
+https://dbdiagram.io/d/24CC-65c071d3ac844320ae6fc3ca
+
+// A person that participates in any event
+Table Parctipant {
+  participant_id integer [primary key]
+  name varchar [not null]
+  date_of_birth timestamp
+
+  // millimeters
+  height integer
+}
+
+// A single competion/event
+Table Event {
+  event_id integer [primary key]
+  name varchar [not null]
+  date date
+}
+
+// A team that participate in any event
+Table Team {
+  team_id integer [primary key]
+  name varchar [not null]
+}
+
+// An Activity done in any event
+Table Activity {
+  activity_id integer [primary key]
+  name varchar [not null]
+  description varchar
+}
+
+// Represents which Activites are on which events and
+// the score modifier use for that activity during that event
+Table EventActivity {
+  event_activity_id integer [primary key]
+
+  activity_id integer [ref: > Activity.activity_id]
+  event_id integer [ref: > Event.event_id]
+  score_modifer double
+
+  indexes {
+    (activity_id, event_id) [unique]
+  }
+}
+
+// Represent which Participants are on which teams for which events
+Table EventParticipant {
+  team_participant_event_id integer [primary key]
+
+  team_id integer [null, ref: > Team.team_id]
+  participant_id integer [not null, ref: > Parctipant.participant_id]
+  event_id integer [not null, ref: > Event.event_id]
+
+  // grams?
+  start_weight integer
+  end_weight integer
+
+  goals varchar
+
+  indexes {
+    (participant_id, event_id) [unique]
+  }
+}
+
+// Represents the score for each activity a participant did during an event
+Table ParticipantActivity {
+  participant_activity_id integer [primary key]
+  participant_id integer [not null, ref: > Parctipant.participant_id]
+  event_activity_id integer [not null, ref: > EventActivity.event_activity_id]
+
+  indexes {
+    (participant_id, event_activity_id) [unique]
+  }
+}

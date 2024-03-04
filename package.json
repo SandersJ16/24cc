@@ -1,0 +1,15 @@
+{
+  "name": "24cc",
+  "version": "1.0.0",
+  "description": "24H Conditioning Competition",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-sandersj16:SandersJ16/24cc.git"
+  },
+  "author": "Justin L Sanders",
+  "license": "ISC"
+}
