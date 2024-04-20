@@ -1,11 +1,12 @@
 version: '3.7'
 
 services:
-  server:
+  sandbox:
     image: 24cc:N${NODE_VERSION}
     build:
       context: .
-      target: dev
+      target: base
+    command: ["tail", "-f", "/dev/null"]
     environment:
       NODE_ENV: production
       POSTGRES_HOST: db
@@ -21,7 +22,28 @@ services:
     secrets:
       - db-password
     volumes:
-      - ./src:/usr/src/app/src
+      - ./:/usr/app
+  server:
+    image: 24cc:N${NODE_VERSION}
+    build:
+      context: .
+      target: ${APP_CONTEXT:-dev}
+    environment:
+      NODE_ENV: production
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - 3000:3000
+      - 9229:9229
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - db-password
+    volumes:
+      - ./src:/usr/app/src
   db:
     image: postgres
     restart: always
